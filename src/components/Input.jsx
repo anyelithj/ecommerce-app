@@ -4,7 +4,12 @@ function Input({ label, attribute, onChange }) {
 	return (
 		<div className='flex justify-center'>
 			<div className='mb-3 xl:w-96'>
-				<label className='form-label text-sm inline-block mb-2 text-gray-700'>{label}</label>
+				<label
+					htmlFor={attribute.id}
+					className='form-label text-sm inline-block mb-2 text-gray-700'
+				>
+					{label}
+				</label>
 				<input
 					id={attribute.id}
 					name={attribute.name}
