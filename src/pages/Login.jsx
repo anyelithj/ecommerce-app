@@ -1,14 +1,41 @@
-import React, { useState } from 'react'
-import {FcGoogle} from 'react-icons/fc'
-import {FaFacebookSquare} from 'react-icons/fa'
-import Input from '../components/Input'
+import React, { useState, useContext } from 'react'
+import { FcGoogle } from 'react-icons/fc'
+import { FaFacebookSquare } from 'react-icons/fa'
+import Input from '../components/Input.jsx'
+import { authContext } from '../context/Auth'
+import { post, get } from '../api/api.js'
 
 // Img
 import logo from '../assets/img/logo__large_plus.png'
 
-function Login() {
+export default function Login() {
+	const { logged, user, setUser } = useContext(authContext)
+
 	// Show Continue
 	const [activeContinue, setActiveContinue] = useState(false)
+
+	// State form
+	const [data, setData] = useState({
+		email: '',
+		password: '',
+	})
+
+	const handleFormChange = (event) => {
+		// console.log(event.target)
+		const { name, value } = event.target
+		setData({
+			...data,
+			[name]: value,
+		})
+	}
+
+	// Provisional until a nav is implemented
+	const logout = () => {
+		get('/api/auth/logout').then((result) => {
+			console.log(result)
+			setUser({ type: 'LOGOUT' })
+		})
+	}
 
 	const showContinue = () => {
 		setActiveContinue(!activeContinue)
@@ -16,6 +43,15 @@ function Login() {
 
 	const handleSubmit = (e) => {
 		console.log(e)
+		e.preventDefault()
+
+		post('/api/auth/login', data)
+			.then(({ user }) => {
+				setUser({ type: 'LOGIN', payload: user })
+			})
+			.catch((error) => {
+				console.log(error)
+			})
 	}
 
 	return (
@@ -23,6 +59,16 @@ function Login() {
 			{/* Header */}
 			<header className='bg-[#fff059] p-2 md:h-56'>
 				<img className='w-100' src={logo} alt='logo' />
+
+				{logged && (
+					<ul>
+						<li>{}</li>
+						<li>
+							<button onClick={logout}>Log out</button>
+							<p>{user}</p>
+						</li>
+					</ul>
+				)}
 			</header>
 
 			{/* Form */}
@@ -54,6 +100,8 @@ function Login() {
 											className: '',
 											required: true,
 										}}
+										value={data.email}
+										onChange={handleFormChange}
 									/>
 								)}
 								{activeContinue && (
@@ -67,6 +115,8 @@ function Login() {
 											className: '',
 											required: true,
 										}}
+										value={data.password}
+										onChange={handleFormChange}
 									/>
 								)}
 							</div>
@@ -121,5 +171,3 @@ function Login() {
 		</div>
 	)
 }
-
-export default Login
