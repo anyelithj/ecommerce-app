@@ -1,14 +1,14 @@
 import React from 'react'
 
-function Input({ label, attribute, onChange }) {
+function Input({ labelText, attribute, onChange }) {
 	return (
 		<div className='flex justify-center'>
-			<div className='mb-3 xl:w-96'>
+			<div className='mb-3 w-full'>
 				<label
 					htmlFor={attribute.id}
 					className='form-label text-sm inline-block mb-2 text-gray-700'
 				>
-					{label}
+					{labelText}
 				</label>
 				<input
 					id={attribute.id}
